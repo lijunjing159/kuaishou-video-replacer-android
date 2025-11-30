@@ -59,7 +59,7 @@ jobs:
         echo "apk_name=$(basename $APK_FILE)" >> $GITHUB_OUTPUT
     
     - name: 上传APK到Artifacts
-      uses: actions/upload-artifact@v3
+      uses: actions/upload-artifact@v4
       with:
         name: 快手视频替换工具-APK
         path: bin/*.apk
