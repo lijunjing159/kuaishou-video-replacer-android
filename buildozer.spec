@@ -25,7 +25,7 @@ source.main = main.py
 android.permissions = WRITE_EXTERNAL_STORAGE,READ_EXTERNAL_STORAGE
 
 # Android API版本
-android.api = 31
+android.api = 33
 
 # 最低Android API版本  
 android.minapi = 21
@@ -45,8 +45,8 @@ fullscreen = 0
 # Python依赖
 requirements = python3,kivy
 
-# Android架构
-android.archs = arm64-v8a,armeabi-v7a
+# Android架构（只构建arm64以节省时间）
+android.archs = arm64-v8a
 
 # 应用图标（如果有）
 #icon.filename = %(source.dir)s/icon.png

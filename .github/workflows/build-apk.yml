@@ -12,6 +12,7 @@ jobs:
   build:
     name: 构建Android APK
     runs-on: ubuntu-latest
+    timeout-minutes: 60
     
     steps:
     - name: 检出代码
@@ -38,14 +39,16 @@ jobs:
           libncursesw5-dev cmake \
           libffi-dev libssl-dev
     
+    - name: 缓存Buildozer全局目录
+      uses: actions/cache@v3
+      with:
+        path: ~/.buildozer
+        key: buildozer-${{ hashFiles('**/buildozer.spec') }}
+    
     - name: 安装Python依赖
       run: |
         pip install --upgrade pip
-        pip install buildozer cython
-    
-    - name: 清理Buildozer缓存（可选）
-      run: |
-        rm -rf ~/.buildozer
+        pip install buildozer==1.5.0 cython==0.29.36
     
     - name: 构建APK
       run: |
