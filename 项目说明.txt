@@ -1,0 +1,212 @@
+================================================================================
+                    快手视频替换工具 - Android版本
+================================================================================
+
+📱 项目简介
+-----------
+这是一个Android原生应用，可以直接在手机上替换快手APP的视频文件，
+无需电脑，无需ADB连接。
+
+✨ 核心优势
+-----------
+✓ 直接在手机上运行，无需电脑
+✓ 保留桌面版所有功能
+✓ 更简单的操作流程
+✓ 更快的执行速度（本地文件操作）
+✓ 友好的触屏界面
+
+📁 项目结构
+-----------
+android_app/
+├── main.py                    # 主程序文件（Kivy应用）
+├── buildozer.spec            # APK构建配置文件
+├── requirements.txt          # Python依赖列表
+├── README.md                 # 项目说明（英文）
+├── Windows构建说明.md        # Windows环境构建指南
+├── build_apk.sh              # Linux构建脚本
+└── 项目说明.txt              # 本文件
+
+🔧 技术栈
+---------
+• Python 3.8+                 # 编程语言
+• Kivy 2.2.1                  # 跨平台UI框架
+• Buildozer 1.5.0             # Android打包工具
+• Android SDK/NDK             # Android开发工具
+
+📋 功能列表
+-----------
+1. 替换 .record_cache_dir 目录视频
+   → 单个目录的视频替换
+
+2. 批量替换 .post 目录
+   → 批量替换所有子文件夹的视频
+
+3. 批量替换 .encoding_output_path 目录
+   → 批量替换所有子文件夹的视频
+
+4. 批量替换 workspace 目录
+   → 批量替换两层子文件夹的视频
+
+5. ★ 一键全部替换 ★
+   → 自动依次执行以上所有操作
+
+🚀 快速开始
+-----------
+
+方式一：使用WSL（Windows推荐）
+1. 安装WSL：在PowerShell中运行 wsl --install
+2. 打开WSL终端，安装依赖：
+   sudo apt-get update
+   sudo apt-get install -y python3-pip git openjdk-11-jdk
+   pip3 install buildozer cython
+3. 复制项目到WSL并构建：
+   cp -r /mnt/c/Users/Administrator/Desktop/shuchu/android_app ~/
+   cd ~/android_app
+   buildozer android debug
+4. 获取APK：
+   cp bin/*.apk /mnt/c/Users/Administrator/Desktop/
+
+方式二：使用Docker
+docker run --rm -v ${PWD}:/app kivy/buildozer android debug
+
+方式三：使用GitHub Actions（自动构建）
+上传到GitHub，配置Actions自动构建
+
+📱 安装使用
+-----------
+1. 将生成的APK传到手机
+2. 启用"安装未知来源应用"
+3. 安装APK
+4. 授予存储权限
+5. 打开应用，选择视频文件
+6. 选择替换模式，开始替换
+
+⚙️ 构建配置
+-----------
+buildozer.spec 中的重要配置：
+
+• title = 快手视频替换工具           # 应用名称
+• package.name = ksvideoReplacer      # 包名
+• package.domain = org.videotools     # 域名
+• version = 1.0.0                     # 版本号
+• android.permissions =               # 权限
+    WRITE_EXTERNAL_STORAGE,
+    READ_EXTERNAL_STORAGE
+• android.api = 31                    # 目标API级别
+• android.minapi = 21                 # 最低API级别
+• requirements = python3,kivy         # Python依赖
+
+🎨 界面设计
+-----------
+• 顶部：应用标题
+• 视频选择区：显示当前选择的视频
+• 按钮区：5个操作按钮
+  - 4个单独替换按钮（绿色）
+  - 1个全部替换按钮（橙色，突出显示）
+• 日志区：实时显示操作进度和结果
+
+📂 目标路径
+-----------
+应用会操作以下目录下的视频文件：
+/storage/emulated/0/Android/data/com.smile.gifmaker/files/
+├── .record_cache_dir/          # 单个目录
+├── .post/                      # 一层子文件夹
+├── .encoding_output_path/      # 一层子文件夹
+└── workspace/                  # 两层子文件夹
+
+⚠️ 注意事项
+-----------
+1. 必须先安装快手APP（com.smile.gifmaker）
+2. 首次使用需授予存储权限
+3. Android 11+需要"所有文件访问权限"
+4. 建议先备份重要视频
+5. 替换操作不可逆，请谨慎操作
+
+🔍 与桌面版对比
+---------------
+┌──────────────┬────────────────┬────────────────┐
+│   特性       │   桌面版       │   Android版    │
+├──────────────┼────────────────┼────────────────┤
+│ 运行环境     │ Windows/Mac等  │ Android手机    │
+│ 连接方式     │ USB + ADB      │ 无需连接       │
+│ 文件操作     │ ADB命令        │ 直接操作       │
+│ 界面框架     │ Tkinter        │ Kivy          │
+│ 便携性       │ 需要电脑       │ 仅需手机       │
+│ 执行速度     │ 较慢           │ 更快           │
+│ 操作难度     │ 需要配置ADB    │ 直接使用       │
+└──────────────┴────────────────┴────────────────┘
+
+🐛 故障排除
+-----------
+
+问题1：构建失败
+解决：
+- 检查Java版本：java -version（需要11+）
+- 清理缓存：buildozer android clean
+- 更新工具：pip3 install --upgrade buildozer
+
+问题2：安装失败
+解决：
+- 检查存储空间是否充足
+- 确认允许安装未知来源
+- 卸载旧版本后重新安装
+
+问题3：无法访问文件
+解决：
+- 手动授予存储权限
+- Android 11+需在设置中授予"所有文件访问权限"
+
+问题4：目录不存在
+解决：
+- 确保快手APP已安装且运行过
+- 检查路径是否正确
+
+📊 构建时间参考
+---------------
+• 首次构建：约20-40分钟（需下载SDK、NDK等）
+• 再次构建：约5-10分钟
+• 使用缓存：约2-5分钟
+
+💾 APK大小
+----------
+• Debug版本：约20-30 MB
+• Release版本：约15-20 MB（优化后）
+
+🔐 权限说明
+-----------
+应用仅需要存储权限：
+• READ_EXTERNAL_STORAGE   - 读取视频文件
+• WRITE_EXTERNAL_STORAGE  - 写入替换后的视频
+
+不会访问：
+✗ 网络
+✗ 相机
+✗ 麦克风
+✗ 位置
+✗ 联系人
+✗ 其他隐私数据
+
+📞 技术支持
+-----------
+• Kivy官方文档：https://kivy.org/doc/stable/
+• Buildozer文档：https://buildozer.readthedocs.io/
+• Python-for-Android：https://python-for-android.readthedocs.io/
+
+💡 开发建议
+-----------
+• 首次构建建议在Linux环境进行
+• Windows用户推荐使用WSL
+• 构建过程中可能需要科学上网（下载SDK）
+• 保持耐心，首次构建时间较长是正常的
+
+📝 版本历史
+-----------
+v1.0.0 (2025-11-30)
+- 初始版本
+- 实现所有核心功能
+- 支持5种替换模式
+- 提供详细的操作日志
+
+================================================================================
+                           祝你使用愉快！
+================================================================================

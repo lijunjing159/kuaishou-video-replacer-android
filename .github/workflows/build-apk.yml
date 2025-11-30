@@ -1,0 +1,95 @@
+name: 自动构建APK
+
+on:
+  # 当推送代码时触发
+  push:
+    branches: [ main, master ]
+  
+  # 允许手动触发
+  workflow_dispatch:
+
+jobs:
+  build:
+    name: 构建Android APK
+    runs-on: ubuntu-latest
+    
+    steps:
+    - name: 检出代码
+      uses: actions/checkout@v3
+    
+    - name: 设置Python环境
+      uses: actions/setup-python@v4
+      with:
+        python-version: '3.10'
+    
+    - name: 设置Java环境
+      uses: actions/setup-java@v3
+      with:
+        distribution: 'temurin'
+        java-version: '11'
+    
+    - name: 安装系统依赖
+      run: |
+        sudo apt-get update
+        sudo apt-get install -y \
+          git zip unzip openjdk-11-jdk \
+          autoconf libtool pkg-config \
+          zlib1g-dev libncurses5-dev \
+          libncursesw5-dev libtinfo5 cmake \
+          libffi-dev libssl-dev
+    
+    - name: 安装Python依赖
+      run: |
+        pip install --upgrade pip
+        pip install buildozer cython
+    
+    - name: 清理Buildozer缓存（可选）
+      run: |
+        rm -rf ~/.buildozer
+    
+    - name: 构建APK
+      run: |
+        buildozer -v android debug
+    
+    - name: 获取APK文件名
+      id: apk_name
+      run: |
+        APK_FILE=$(ls bin/*.apk | head -n 1)
+        echo "apk_file=$APK_FILE" >> $GITHUB_OUTPUT
+        echo "apk_name=$(basename $APK_FILE)" >> $GITHUB_OUTPUT
+    
+    - name: 上传APK到Artifacts
+      uses: actions/upload-artifact@v3
+      with:
+        name: 快手视频替换工具-APK
+        path: bin/*.apk
+    
+    - name: 创建Release（如果是tag推送）
+      if: startsWith(github.ref, 'refs/tags/')
+      uses: softprops/action-gh-release@v1
+      with:
+        files: bin/*.apk
+        body: |
+          ## 快手视频替换工具 Android版
+          
+          ### 安装说明
+          1. 下载APK文件
+          2. 传输到Android设备
+          3. 启用"安装未知来源应用"
+          4. 安装APK
+          5. 授予存储权限
+          
+          ### 功能特性
+          - ✅ 单目录替换
+          - ✅ 批量替换 .post 目录
+          - ✅ 批量替换 .encoding 目录  
+          - ✅ 批量替换 workspace 目录
+          - ✅ 一键全部替换
+          
+          ### 使用说明
+          1. 打开应用并授予存储权限
+          2. 选择要替换的视频文件
+          3. 选择替换模式
+          4. 等待完成
+      env:
+        GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
