@@ -31,7 +31,7 @@ android.api = 31
 android.minapi = 21
 
 # Android NDK版本
-android.ndk = 23b
+android.ndk = 25b
 
 # 是否自动接受SDK许可证
 android.accept_sdk_license = True
