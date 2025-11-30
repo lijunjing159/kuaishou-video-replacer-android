@@ -43,7 +43,7 @@ orientation = portrait
 fullscreen = 0
 
 # Python依赖
-requirements = python3,kivy
+requirements = python3,kivy==2.2.1,pyjnius
 
 # Android架构（只构建arm64以节省时间）
 android.archs = arm64-v8a
